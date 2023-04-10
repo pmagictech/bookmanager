@@ -1,0 +1,57 @@
+version: "3.3"
+services:
+  app:
+    image: node:18-alpine
+    restart: always
+    working_dir: /app
+    volumes:
+      - ./frontend:/app
+    ports:
+      - 80:80
+    environment:
+      - PORT=80
+      - NODE_ENV=production
+    command: npm start
+    depends_on:
+      - server
+
+  server:
+    image: node:18-alpine
+    restart: always
+    working_dir: /server
+    volumes:
+      - ./server:/server
+    ports:
+      - 4000:4000
+    environment:
+      - NODE_ENV=production
+    command: npm start
+    depends_on:
+      - db
+    env_file:
+      - .env
+
+  db:
+    container_name: db
+    restart: always
+    image: postgres:12
+    ports:
+      - 5432:5432
+    volumes:
+      - ./server/docker:/docker-entrypoint-initdb.d
+      - postgres-data:/var/lib/postgresql/data
+    env_file:
+      - .env
+
+  pgadmin:
+    image: dpage/pgadmin4:6.21
+    ports:
+      - 8080:80
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+    env_file:
+      - .env
+
+volumes:
+  postgres-data: {}
+  pgadmin-data: {}
