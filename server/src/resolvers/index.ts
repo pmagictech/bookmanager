@@ -1,16 +1,16 @@
 import pubsub from "../pubSub.js";
-import { books, addBook } from "./book.js";
-import { user, addUser } from "./user.js";
+import { bookMutation, bookQuery } from "./book.js";
+import { userQuery, userMutation } from "./user.js";
 
 
 export default {
   Query: {
-    books,
-    user,
+    ...bookQuery,
+    ...userQuery
   },
   Mutation: {
-    addBook,
-    addUser,
+    ...bookMutation,
+    ...userMutation,
   },
   Subscription: {
     bookAdded: {

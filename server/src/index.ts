@@ -12,15 +12,13 @@ import pkg from "pg";
 
 import resolvers from "./resolvers/index.js";
 import typeDefs from "./typeDefs.js";
+import { getContextHandler } from "./middleware/auth.js";
+
+import type { MyContext } from "./types.js";
 
 
 const PORT = 4000;
 const MAX_DB_CLIENTS = 1000;
-
-interface MyContext {
-  token?: string | string[];
-  db: any;
-}
 
 
 const pool = new pkg.Pool({
@@ -57,16 +55,14 @@ const server = new ApolloServer<MyContext>({
 await server.start();
 app.use(
   "/graphql",
-  cors<cors.CorsRequest>(),
+  cors<cors.CorsRequest>({ origin: ["http://localhost:3000"], credentials: true }),
   bodyParser.json(),
   expressMiddleware(server, {
-    context: async ({ req }) => ({ token: req.headers.token, db: pool }),
+    context: getContextHandler(pool),
   })
 );
 
 httpServer.listen(PORT, () => {
-  console.log(process.env);
-
   console.log(`🚀 Query endpoint ready at http://localhost:${PORT}/graphql`);
   console.log(`🚀 Subscription endpoint ready at ws://localhost:${PORT}/graphql`);
 });
