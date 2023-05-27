@@ -2,11 +2,16 @@ import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
 
+import { IMessageContext, Message } from "@src/context/MessageContext";
 import { useUser } from "@src/hooks";
+import { useContext } from "react";
+import Modal from "./Modal";
 
-export default function Layout({ title, desc, children }: any) {
+export default function Layout({ siteTitle, desc, children }: any) {
   const { user, isLoggedIn } = useUser();
   const router = useRouter();
+
+  const { title, type, message, isOpen, closeMessage } = useContext(Message) as IMessageContext;
 
   const Logout = () => {
     localStorage.removeItem(process.env.NEXT_PUBLIC_TOKEN_KEY || "");
@@ -16,7 +21,7 @@ export default function Layout({ title, desc, children }: any) {
   return (
     <>
       <Head>
-        <title>{title ?? "Goodreads | Meet your next favorite book"}</title>
+        <title>{siteTitle ?? "Goodreads | Meet your next favorite book"}</title>
         <meta
           name="description"
           content={
@@ -40,7 +45,9 @@ export default function Layout({ title, desc, children }: any) {
               <div className="py-2 px-3 text-sm">{user?.name}</div>
               <Link
                 className={`py-2 px-3 text-sm font-medium leading-5 text-blue-700 ring-white ring-opacity-60 ring-offset-2 ring-offset-blue-400 focus:outline-none focus:ring-2 ${
-                  router.asPath === "/home" ? "shadow bg-white/[0.4] hover:bg-black/[0.2]" : "hover:bg-white/[0.2] hover:text-neutral-700"
+                  router.asPath === "/home"
+                    ? "shadow bg-white/[0.4] hover:bg-black/[0.2]"
+                    : "hover:bg-white/[0.2] hover:text-neutral-700"
                 }`}
                 href="/home"
               >
@@ -48,7 +55,9 @@ export default function Layout({ title, desc, children }: any) {
               </Link>
               <Link
                 className={`py-2 px-3 text-sm font-medium leading-5 text-blue-700 ring-white ring-opacity-60 ring-offset-2 ring-offset-blue-400 focus:outline-none focus:ring-2 ${
-                  router.asPath === "/add-book" ? "shadow bg-white/[0.4] hover:bg-black/[0.2]" : "hover:bg-white/[0.2] hover:text-neutral-700"
+                  router.asPath === "/add-book"
+                    ? "shadow bg-white/[0.4] hover:bg-black/[0.2]"
+                    : "hover:bg-white/[0.2] hover:text-neutral-700"
                 }`}
                 href="/add-book"
               >
@@ -66,6 +75,13 @@ export default function Layout({ title, desc, children }: any) {
         </div>
       </header>
       {children}
+      <Modal
+        title={title}
+        type={type}
+        isOpen={isOpen}
+        message={message}
+        closeModal={closeMessage}
+      />
     </>
   );
 }

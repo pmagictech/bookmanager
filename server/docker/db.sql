@@ -13,6 +13,7 @@ CREATE TABLE IF NOT EXISTS books (
   author character varying NOT NULL,
   cover_image character varying NOT NULL,
   date bigint NOT NULL,
+  user_id integer NOT NULL references users(id),
   created_at bigint NOT NULL,
   UNIQUE (title)
 );

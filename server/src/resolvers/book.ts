@@ -3,11 +3,11 @@ import pubsub from "../pubSub.js";
 import type { MyContext, AddBookArgs } from "../types.js";
 
 export const bookMutation = {
-  addBook: authenticate(async (_: any, { title, author, date, coverImage }: AddBookArgs, { db }: MyContext) => {
+  addBook: authenticate(async (_: any, { title, author, date, coverImage }: AddBookArgs, { db, user }: MyContext) => {
     try {
       const res = await db.query(
-        "INSERT INTO books (title, author, date, cover_image, created_at) VALUES($1, $2, $3, $4, $5) RETURNING *",
-        [title, author, date, coverImage, Date.now()]
+        "INSERT INTO books (title, author, date, cover_image, user_id, created_at) VALUES($1, $2, $3, $4, $5, $6) RETURNING *",
+        [title, author, date, coverImage, user.id, Date.now()]
       );
 
       pubsub.publish("BOOK_ADDED", { bookAdded: { title, author } });

@@ -1,10 +1,11 @@
-import { SyntheticEvent, useState } from "react";
+import { SyntheticEvent, useContext, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import styles from "@src/styles/Home.module.css";
 
 import Layout from "@src/components/Layout";
 import { SignUp } from "@src/graphql/auth";
+import { IMessageContext, Message } from "@src/context/MessageContext";
 
 
 export default function Home() {
@@ -14,6 +15,7 @@ export default function Home() {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
+  const { openMessage } = useContext(Message) as IMessageContext;
   const router = useRouter();
 
   const handleSignUp = async (event: SyntheticEvent<HTMLFormElement>) => {
@@ -25,14 +27,14 @@ export default function Home() {
 
       localStorage.setItem(process.env.NEXT_PUBLIC_TOKEN_KEY || '', token);
 
-      router.push("/");
+      openMessage("Success", "You have signed up successfully.").then(() => router.push("/home"));
     } catch (e: any) {
       setError(e.message);
     }
   };
 
   return (
-    <Layout title="Goodreads Registration">
+    <Layout siteTitle="Goodreads Registration">
       <main>
         <section className={styles.hero}>
           <form className="mt-12 space-y-3" onSubmit={handleSignUp}>

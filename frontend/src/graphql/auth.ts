@@ -1,5 +1,5 @@
 import { gql } from "@apollo/client";
-import { query } from "./fetcher";
+import { mutate, query } from "./fetcher";
 
 export async function Login (email: string, password: string): Promise<string> {
   const { getToken } = await query(
@@ -25,8 +25,8 @@ export async function Login (email: string, password: string): Promise<string> {
 }
 
 export async function SignUp (name: string, email: string, password: string): Promise<string> {
-  const { addUser } = await query(gql`
-    mutation AddUser {
+  const { addUser } = await mutate(gql`
+    mutation AddUser($name: String!, $email: String!, $password: String!) {
       addUser(name: $name, email: $email, password: $password) {
         code
         message

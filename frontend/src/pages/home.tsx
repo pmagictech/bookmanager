@@ -23,7 +23,10 @@ const QUERY = gql`
 export default function Home() {
   const { isLoading, isLoggedIn } = useUser();
   const router = useRouter();
-  const { data, loading, error } = useQuery(QUERY);
+  const { data, loading } = useQuery(QUERY, {
+    fetchPolicy: "cache-and-network",
+    nextFetchPolicy: "cache-first",
+  });
   const [hasMounted, setHasMounted] = useState(false);
 
   useEffect(() => {
