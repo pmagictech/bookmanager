@@ -49,6 +49,21 @@ const server = new ApolloServer<MyContext>({
         };
       },
     },
+    {
+      async requestDidStart() {
+        return {
+          async willSendResponse({ response: { body, http }, contextValue: { token } }) {
+            http.headers.set("token", "rererer");
+            if (body.kind === "single" && "data" in body.singleResult) {
+              body.singleResult.extensions = {
+                ...body.singleResult.extensions,
+                token,
+              };
+            }
+          },
+        };
+      },
+    },
   ],
 });
 

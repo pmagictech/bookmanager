@@ -1,4 +1,5 @@
-This is a Book Library web application project.
+# Book Manager
+This is a Book Library web application built with Nextjs, Apollo, PostgreSQL and Docker.
 
 ## Getting Started
 

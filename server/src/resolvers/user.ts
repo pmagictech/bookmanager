@@ -1,7 +1,7 @@
-import pubsub from "../pubSub.js";
-import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 import { authenticate } from "../middleware/auth.js";
+import pubsub from "../pubSub.js";
 
 
 export const userQuery = {
@@ -31,7 +31,7 @@ export const userQuery = {
         code: 200,
         success: true,
         message: "",
-        token: jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: "1h" }),
+        token: jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_DURATION }),
       };
     } else {
       return invalidMessage;

@@ -27,9 +27,13 @@ export const getContextHandler =
       const res = await db.query("SELECT * FROM users WHERE id = $1", [id]);
 
       user = res.rows[0];
+      return {
+        user,
+        db,
+        token: jwt.sign({ id: user.id }, process.env.JWT_SECRET, { expiresIn: process.env.JWT_DURATION }),
+      };
     } catch (err: any) {
       console.error(req.headers.token, err);
+      return { user, db };
     }
-
-    return { user, db };
   };

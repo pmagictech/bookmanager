@@ -6,6 +6,7 @@ export interface User {
 
 export interface MyContext {
   user?: User;
+  token ?: string;
   db: any;
 }
 
